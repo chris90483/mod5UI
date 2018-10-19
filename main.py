@@ -1,5 +1,5 @@
 import pygame
-import snake.snakeUI
+import snake.Controller
 
 pygame.init()
 pygame.font.init()
@@ -27,8 +27,8 @@ def main():
 # functions
 def start_snake_game():
     screen.fill((0, 0, 0))
-    ui = snake.snakeUI.SnakeUI(screen, gamefont)
-    ui.start()
+    controller = snake.Controller.Controller(screen, gamefont)
+    controller.start()
 
 
 def draw_main_menu():

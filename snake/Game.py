@@ -52,12 +52,14 @@ class SnakeGame:
             top += 10
         self.board = surfaces
 
+    # clears the board: sets every square as not active.
     def clear_board(self,):
         for plane in self.board:
             for row in plane:
                 for val in row:
                     val[1] = False
 
+    # does everything necessary to update the snake.
     def update_snake(self):
         # get indices of last head
         z, y, x = self.snake_body.copy()[len(self.snake_body) - 1]
@@ -87,6 +89,7 @@ class SnakeGame:
         print("body: {0}".format(self.snake_body))
         print("apple: {0} \n".format(self.apple))
 
+    # does everything necessary to correctly update the board.
     def update_board(self):
         self.clear_board()
         self.update_snake()
@@ -100,3 +103,19 @@ class SnakeGame:
         # add the apple to the board
         z, y, x = self.apple[0], self.apple[1], self.apple[2]
         self.board[z][y][x][1] = True
+
+    # return the board as an array of the bits to be sent to the FPGA
+    # see the protocol for what the representation means
+    def get_board_as_sendable(self):
+        data = []
+
+        # chunk is 8 bits
+        chunk = []
+        for z in range(0, 4):
+            for y in range(0, 4):
+                if len(chunk) >= 8:
+                    data.append(chunk)
+                    chunk = []
+                for x in range(0, 4):
+                    chunk.append(self.board[z][y][x][1])
+        return data
