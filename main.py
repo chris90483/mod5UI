@@ -42,5 +42,4 @@ def draw_main_menu():
     screen.blit(select_surface, (0, 0))
     screen.blit(snake3d_surface, (0, 22))
 
-
 main()

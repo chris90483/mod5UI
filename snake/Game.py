@@ -1,9 +1,10 @@
 import pygame
 import random
+import math
 
 class SnakeGame:
 
-    # board[x][y][z] means board[front to back][bottom to top][right to left]
+    # board[x][y][z] means board[front to back][bottom to top][right to left]q
     # see https://docs.google.com/document/d/1-LGIlPrV1G8JojxiikUIvX7hAX0S8LZAeEbLJSfVa48
     # for an explanation.
     board = []
@@ -30,8 +31,7 @@ class SnakeGame:
     # [[=========]]
 
     def __init__(self):
-        global board
-        board = self.setup_board()
+        self.board = self.setup_board()
 
     # initializes the board so all values are False (meaning all LEDs should be off)
     def setup_board(self):
@@ -39,7 +39,7 @@ class SnakeGame:
         left_offset = 0
         top_offset = 30
         offset = 12
-        box_radius = 30
+        box_radius = math.floor(2.5*offset)
 
         for _z in range(0, 4):
             top = top_offset
@@ -56,7 +56,7 @@ class SnakeGame:
             surfaces.append(row_surfaces)
             top_offset += 8
             left_offset += 8
-        self.board = surfaces
+        return surfaces
 
     # clears the board: sets every square as not active.
     def clear_board(self,):
@@ -108,7 +108,9 @@ class SnakeGame:
         try:
             for segment in self.snake_body:
                 z, y, x = 3 - segment[0], 3 - segment[1], 3 - segment[2]
-                # z, y, x and 'active' boolean
+                if self.board[z][y][x][1] == True and not self.apple == [z, y, x]:
+                    self.game_over = True
+                # z, y, x and 'active'
                 self.board[z][y][x][1] = True
         except IndexError:
             self.game_over = True
