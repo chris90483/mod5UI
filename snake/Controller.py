@@ -18,13 +18,12 @@ class Controller:
         #communication.setup()
 
     def start(self):
-        done = False
         self.game.update_board()
         self.ui.draw_board(self.game.board)
         self.ui.flip_display()
 
         start_milis = time.time()
-        while not done:
+        while not self.game.game_over:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
@@ -58,4 +57,5 @@ class Controller:
                 # communication
                 #to_send = self.game.get_board_as_sendable()
                 #communication.matrixcomm(to_send)
+        self.ui.show_final(self.game)
         #communication.cleanup()

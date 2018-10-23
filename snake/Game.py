@@ -22,6 +22,9 @@ class SnakeGame:
     # apple, expressed in coordinates
     apple = [random.randint(0, 3), random.randint(0, 3), random.randint(0, 3)]
 
+    # game_over keeps track of when the game is over.
+    game_over = False
+
     # [[=========]]
     # [[FUNCTIONS]]
     # [[=========]]
@@ -33,15 +36,17 @@ class SnakeGame:
     # initializes the board so all values are False (meaning all LEDs should be off)
     def setup_board(self):
         surfaces = []
-        top = 30
-        offset = 2
-        box_radius = 20
+        left_offset = 0
+        top_offset = 30
+        offset = 12
+        box_radius = 30
 
         for _ in range(0, 4):
+            top = top_offset
             row_surfaces = []
             for row_select in range(0, 4):
                 val_surfaces = []
-                left = 0
+                left = left_offset
                 for x in range(0, 4):
                     #                    PYGAME RECT                                     DRAW AS ACTIVE
                     val_surfaces.append([pygame.Rect(left, top, box_radius, box_radius), False])
@@ -49,7 +54,8 @@ class SnakeGame:
                 row_surfaces.append(val_surfaces)
                 top += box_radius + offset
             surfaces.append(row_surfaces)
-            top += 10
+            top_offset += 8
+            left_offset += 8
         self.board = surfaces
 
     # clears the board: sets every square as not active.
@@ -85,6 +91,10 @@ class SnakeGame:
             z += 1
         elif self.heading == "z-":
             z -= 1
+
+        if not -1 < x < 4 or not -1 < y < 4 or not -1 < z < 4:
+            self.game_over = True
+
         self.snake_body.append([z, y, x])
         print("body: {0}".format(self.snake_body))
         print("apple: {0} \n".format(self.apple))
@@ -95,10 +105,13 @@ class SnakeGame:
         self.update_snake()
 
         # add the snake to the board
-        for segment in self.snake_body:
-            z, y, x = segment[0], segment[1], segment[2]
-            # z, y, x and 'active' boolean
-            self.board[z][y][x][1] = True
+        try:
+            for segment in self.snake_body:
+                z, y, x = segment[0], segment[1], segment[2]
+                # z, y, x and 'active' boolean
+                self.board[z][y][x][1] = True
+        except IndexError:
+            self.game_over = True
 
         # add the apple to the board
         z, y, x = self.apple[0], self.apple[1], self.apple[2]

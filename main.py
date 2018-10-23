@@ -22,6 +22,7 @@ def main():
                     draw_main_menu()
 
         pygame.display.flip()
+    pygame.quit()
 
 
 # functions

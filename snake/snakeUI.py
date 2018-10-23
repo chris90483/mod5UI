@@ -1,4 +1,5 @@
 import pygame
+import math
 import snake.Game
 
 
@@ -35,6 +36,22 @@ class SnakeUI:
         self.score_txt = "score: " + str(game.score)
         self.score_surface = self.gamefont.render(self.score_txt, False, (255, 255, 255))
         self.screen.blit(self.score_surface, (0, 0))
+
+    def show_final(self, game):
+        self.clear_screen()
+        width, height = pygame.display.get_surface().get_size()
+        width, height = math.floor(0.5 * width) - 100, math.floor(0.5 * height)
+        self.score_txt = "Game over! Final score: " + str(game.score)
+        self.score_surface = self.gamefont.render(self.score_txt, False, (255, 255, 255))
+        self.screen.blit(self.score_surface, (width, height))
+        self.flip_display()
+        keydown = False
+        while not keydown:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    keydown = True
+        self.clear_screen()
+        self.flip_display()
 
     def flip_display(self):
         pygame.display.flip()
