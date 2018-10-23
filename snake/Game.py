@@ -41,13 +41,13 @@ class SnakeGame:
         offset = 12
         box_radius = 30
 
-        for _ in range(0, 4):
+        for _z in range(0, 4):
             top = top_offset
             row_surfaces = []
-            for row_select in range(0, 4):
+            for _y in range(0, 4):
                 val_surfaces = []
                 left = left_offset
-                for x in range(0, 4):
+                for _x in range(0, 4):
                     #                    PYGAME RECT                                     DRAW AS ACTIVE
                     val_surfaces.append([pygame.Rect(left, top, box_radius, box_radius), False])
                     left += box_radius + offset
@@ -107,14 +107,14 @@ class SnakeGame:
         # add the snake to the board
         try:
             for segment in self.snake_body:
-                z, y, x = segment[0], segment[1], segment[2]
+                z, y, x = 3 - segment[0], 3 - segment[1], 3 - segment[2]
                 # z, y, x and 'active' boolean
                 self.board[z][y][x][1] = True
         except IndexError:
             self.game_over = True
 
         # add the apple to the board
-        z, y, x = self.apple[0], self.apple[1], self.apple[2]
+        z, y, x = 3 - self.apple[0], 3 - self.apple[1], 3 - self.apple[2]
         self.board[z][y][x][1] = True
 
     # return the board as an array of the bits to be sent to the FPGA

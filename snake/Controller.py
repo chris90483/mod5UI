@@ -30,13 +30,13 @@ class Controller:
                         self.ui.clear_screen()
                         return
                     elif event.key == pygame.K_w:
-                        self.game.heading = "y-"
-                    elif event.key == pygame.K_a:
-                        self.game.heading = "x-"
-                    elif event.key == pygame.K_s:
                         self.game.heading = "y+"
-                    elif event.key == pygame.K_d:
+                    elif event.key == pygame.K_a:
                         self.game.heading = "x+"
+                    elif event.key == pygame.K_s:
+                        self.game.heading = "y-"
+                    elif event.key == pygame.K_d:
+                        self.game.heading = "x-"
                     elif event.key == pygame.K_z:
                         self.game.heading = "z+"
                     elif event.key == pygame.K_c:
