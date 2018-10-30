@@ -53,7 +53,7 @@ class Controller:
                 self.ui.show_score(self.game)
                 self.ui.flip_display()
                 start_milis = time.time()
-
+                self.game.get_board_as_sendable()
                 # communication
                 #to_send = self.game.get_board_as_sendable()
                 #communication.matrixcomm(to_send)
