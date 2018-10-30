@@ -19,9 +19,11 @@ class SnakeGame:
     # snake body, expressed in coordinates
     # the head is the last index, the tail is the first index
     snake_body = [[0, 0, -1], [0, 0, 0]]
+    snake_brightness = [1,1,1,1,1,1,1,1]
 
     # apple, expressed in coordinates
     apple = [random.randint(0, 3), random.randint(0, 3), random.randint(0, 3)]
+    apple_brightness = [0,0,0,0,1,1,1,1]
 
     # game_over keeps track of when the game is over.
     game_over = False
@@ -126,11 +128,40 @@ class SnakeGame:
 
         # chunk is 8 bits
         chunk = []
-        for z in range(0, 4):
-            for y in range(0, 4):
+        for zindx, z in enumerate(self.board):
+            for yindx, y in enumerate(z):
                 if len(chunk) >= 8:
                     data.append(chunk)
                     chunk = []
-                for x in range(0, 4):
-                    chunk.append(self.board[z][y][x][1])
+                for xindx, x in enumerate(y):
+                    print("Currently checking : " + str([zindx,yindx,xindx]))
+                    if not x[1]:
+                        brightness =[0,0,0,0,0,0,0,0]
+                    else:
+                        print("Something found")
+                        apple_here = False
+                        snake_here = False
+                        for i in self.snake_body:
+                            print("Checking Snake : " + str(i))
+                            if i == [3 - zindx,3 - yindx,3 - xindx]:
+                                print("Snake found")
+                                snake_here = True
+                                brightness = self.snake_brightness
+                        print("Checking Apple : " + str(self.apple))
+                        if self.apple == [3 - zindx,3 -yindx,3 - xindx]:
+                            print("Apple found : " + str(self.apple))
+                            apple_here = True
+                            brightness = self.apple_brightness
+                    data.append(brightness)
+        print(data)
         return data
+
+
+
+
+
+
+
+
+
+
