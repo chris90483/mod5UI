@@ -27,7 +27,13 @@ pin6 = 0
 pin7 = 0
 pin8 = 0
 delay = 1
-
+controller = []
+controller1 = 0
+controller2 = 0
+controller3 = 0
+controller4 = 0
+controller5 = 0
+controller6 = 0
 
 def setup():
     global clock
@@ -40,6 +46,14 @@ def setup():
     global pin7
     global pin8
     global pins
+    global controller1
+    global controller2
+    global controller3
+    global controller4
+    global controller5
+    global controller6
+    global controller
+    
     clock = 16
     pin1 = 17
     pin2 = 27
@@ -50,10 +64,22 @@ def setup():
     pin7 = 24
     pin8 = 25
     pins = [clock, pin1, pin2, pin3, pin4, pin5, pin6, pin7, pin8]
+    
+    controller1 = 0
+    controller2 = 0
+    controller3 = 0
+    controller4 = 0
+    controller5 = 0
+    controller6 = 0
+    controller = [controller1, controller2, controller3, controller4, controller5, controller6]
 
     io.setmode(io.BCM)
-    for i in pins:
-        io.setup(i, io.OUT)
+
+    for pin in pins:
+        io.setup(pin, io.OUT)
+    
+    for button in controller:
+        io.setup(button, io.IN)
 
     io.output(clock, 1)
     return 0
@@ -78,7 +104,8 @@ def matrixcomm(matrix):
     bytecomm(handshake[0][0])
     for x in matrix:
         for y in x:
-            bytecomm(y)
+            for z in y: 
+                bytecomm(z)
     bytecomm(handshake[1][0])
     return
 
@@ -98,6 +125,9 @@ def bytecomm(array):
     sleep(delay)
     io.output(clock, 1)
     return
+
+def queryController(buttonNumber):
+    return io.read(controller[buttonNumber])
 
 # setup()
 # matrixcomm([[[0,1,0,1,0,1,0,1], [1,0,1,0,1,0,1,0]], [[0,1,0,1,1,1,1,1],[0,0,0,0,1,1,1,1]]])
