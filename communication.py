@@ -79,7 +79,7 @@ def matrixcomm(matrix):
     for x in matrix:
         for y in x:
             bytecomm(y)
-    bytecomm(handshake[1][0])
+    bytecomm(handshake[1])
     return
 
 
