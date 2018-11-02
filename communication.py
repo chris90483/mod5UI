@@ -127,7 +127,7 @@ def bytecomm(array):
     return
 
 def queryController(buttonNumber):
-    return io.read(controller[buttonNumber])
+    return io.input(controller[buttonNumber])
 
 # setup()
 # matrixcomm([[[0,1,0,1,0,1,0,1], [1,0,1,0,1,0,1,0]], [[0,1,0,1,1,1,1,1],[0,0,0,0,1,1,1,1]]])
