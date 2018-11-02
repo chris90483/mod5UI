@@ -12,7 +12,7 @@ io.setup(10,io.OUT)
 buttons = [5,6,12,13,9,10]
 
 while True:
-    for i in range(0,5)
+    for i in range(0,6):
         x = comm.queryController(i)
         if x:
             io.output(buttons[i], 1)
