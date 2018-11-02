@@ -127,6 +127,7 @@ def bytecomm(array):
     return
 
 def queryController(buttonNumber):
+    print(buttonNumber)
     return io.input(controller[buttonNumber])
 
 # setup()
