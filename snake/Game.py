@@ -22,7 +22,7 @@ class SnakeGame:
 
     # apple, expressed in coordinates (z, y, x)
     apple = [random.randint(0, 3), random.randint(0, 3), random.randint(0, 3)]
-    apple_brightness = [0, 0, 0, 0, 1, 1, 1, 1]
+    apple_brightness = [1, 0, 0, 0, 0, 0, 0, 0]
 
     # game_over keeps track of when the game is over.
     game_over = False
@@ -44,7 +44,13 @@ class SnakeGame:
             for row in plane:
                 for val in row:
                     val[1] = False
-
+    
+    # passes on snake head and neck for Controller to check
+    def get_neck(self):
+        snake = self.snake_body
+        return [snake[-1], snake[-2]]
+        
+        
     # does everything necessary to update the snake.
     def update_snake(self):
         # get indices of last head
