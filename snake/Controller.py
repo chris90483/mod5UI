@@ -10,7 +10,8 @@ class Controller:
     gamefont = None
     game = None
     ui = None
-
+    cube_cont = False
+    
     def __init__(self, screen, gamefont):
         self.gamefont = gamefont
         self.game = snake.Game.SnakeGame()
@@ -22,25 +23,50 @@ class Controller:
         self.ui.draw_board(self.game.board)
         self.ui.flip_display()
 
+       
         start_milis = time.time()
         while not self.game.game_over:
+            # Where [0] is head, [1] is neck
+            snake_neck = self.game.get_neck()
+            possible_moves = [ snake_neck[1] != [snake_neck[0][0], snake_neck[0][1]+1, snake_neck[0][2]], snake_neck[1] != [snake_neck[0][0], snake_neck[0][1], snake_neck[0][2]+1], snake_neck[1] != [snake_neck[0][0], snake_neck[0][1]-1, snake_neck[0][2]], snake_neck[1] != [snake_neck[0][0], snake_neck[0][1], snake_neck[0][2]-1], snake_neck[1] != [snake_neck[0][0]+1, snake_neck[0][1], snake_neck[0][2]], snake_neck[1] != [snake_neck[0][0]-1, snake_neck[0][1], snake_neck[0][2]]]
+
+            if cube_cont:
+                for i in range(0,6):
+                    #for when we have communication imported
+                    #if comm.queryController(i):
+                    if True:
+                        if i == 0 and possible_moves[0]:
+                            self.game.heading = "y+"
+                        elif i == 1 and possible_moves[1]:
+                            self.game.heading = "x+"
+                        elif i == 2 and possible_moves[2]:
+                            self.game.heading = "y-"
+                        elif i == 3 and possible_moves[3]:
+                            self.game.heading = "x-"
+                        elif i == 4 and possible_moves[4]:
+                            self.game.heading = "z+"
+                        elif i == 5 and possible_moves[5]:
+                            self.game.heading = "z-"
+            
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
                         self.ui.clear_screen()
                         return
-                    elif event.key == pygame.K_w:
-                        self.game.heading = "y+"
-                    elif event.key == pygame.K_a:
-                        self.game.heading = "x+"
-                    elif event.key == pygame.K_s:
-                        self.game.heading = "y-"
-                    elif event.key == pygame.K_d:
-                        self.game.heading = "x-"
-                    elif event.key == pygame.K_z:
-                        self.game.heading = "z+"
-                    elif event.key == pygame.K_c:
-                        self.game.heading = "z-"
+                    elif event.key != pygame.K_q:
+                        if !cube_cont:
+                            if event.key == pygame.K_w and possible_moves[0]:
+                                    self.game.heading = "y+"
+                            elif event.key == pygame.K_a and possible_moves[1]:
+                                    self.game.heading = "x+"
+                            elif event.key == pygame.K_s and possible_moves[2]:
+                                    self.game.heading = "y-"
+                            elif event.key == pygame.K_d and possible_moves[3]:
+                                    self.game.heading = "x-"
+                            elif event.key == pygame.K_z and possible_moves[4]:
+                                    self.game.heading = "z+"
+                            elif event.key == pygame.K_c and possible_moves[5]:
+                                    self.game.heading = "z-"
 
             # code after the if only gets executed once every frame
             exe_time = time.time() - start_milis
