@@ -8,7 +8,7 @@ class TetrisUI:
     screen = None
     score_txt = None
     score_surface = None
-    frame_rate = 1
+    frame_rate = 0.5
 
     # setup things, gets called when the UI is created automatically
     def __init__(self, screenarg, fontarg):

@@ -1,5 +1,5 @@
-import snake.Game
-import snake.SnakeUI
+import tetris.Game
+import tetris.TetrisUI
 import pygame
 import time
 #import communication
@@ -13,8 +13,8 @@ class Controller:
 
     def __init__(self, screen, gamefont):
         self.gamefont = gamefont
-        self.game = snake.Game.SnakeGame()
-        self.ui = snake.SnakeUI.SnakeUI(screen, gamefont)
+        self.game = tetris.Game.TetrisGame()
+        self.ui = tetris.TetrisUI.TetrisUI(screen, gamefont)
         #communication.setup()
 
     def start(self):
@@ -31,14 +31,25 @@ class Controller:
                         return
                     elif event.key == pygame.K_w:
                         self.game.move_current("back")
+                    elif event.key == pygame.K_s:
+                        self.game.move_current("front")
+                    elif event.key == pygame.K_a:
+                        self.game.move_current("left")
+                    elif event.key == pygame.K_d:
+                        self.game.move_current("right")
+                    self.game.update_board()
+                    self.ui.draw_board(self.game.board)
+                    self.ui.flip_display()
 
             # code after the if only gets executed once every frame
             exe_time = time.time() - start_milis
             if exe_time > (1 / self.ui.frame_rate):
-
-                # local screen updates
                 self.ui.clear_screen()
+                self.game.move_current("down")
+
+                self.game.update_field()
                 self.game.update_board()
+
                 self.ui.draw_board(self.game.board)
                 self.ui.show_score(self.game)
                 self.ui.flip_display()
