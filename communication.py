@@ -1,5 +1,6 @@
 # !/usr/bin/python3
 import RPi.GPIO as io
+import numpy as np
 from time import sleep
 
 '''
@@ -16,6 +17,18 @@ E.g. Matrix x = [[1, 0, 1, 1, 1, 0, 0, 0], [0, 1, 1, 0, 1, 0, 0, 1]]
      '' -> (handshake 1) to all 8 bits. 
 '''
 
+# signal set for initialization of different pi programs.
+standard_size = (4,4,4,8)
+snake_start = [0,0,0,0,0,0,0,1]
+raindrop_start = [0,0,0,0,0,0,1,0]
+menu_start = [0,0,0,0,0,0,0,0]
+program_check = [0,0,0,0,0,0,0,1]
+
+# allowed setup and hold time 
+delay = 0.0001
+frame_count = 0
+
+# pins used for data transmission to FPGA. Uses BCM numbers
 pins = []
 clock = 0
 pin1 = 0
@@ -26,7 +39,8 @@ pin5 = 0
 pin6 = 0
 pin7 = 0
 pin8 = 0
-delay = 1
+
+# pins used for gpio controller. 
 controller = []
 controller1 = 0
 controller2 = 0
@@ -99,7 +113,23 @@ def cleanup():
     io.cleanup()
 
 
+def startupSignal(numberOfProgram):
+    bytecomm(program_check)
+    if numberOfProgram == 0:
+        bytecomm(menu_start)
+    if numberOfProgram == 1:
+        bytecomm(snake_start)
+    elif numberOfProgram == 2:
+        bytecomm(raindrop_start)
+
+
 def matrixcomm(matrix):
+    global frame_count
+    frame_count += 1
+    if frame_count % 32 == 0:
+        frame_count = 0
+        bytecomm(program_check)
+        bytecomm(current_game)
     handshake = [[[1] * 8], [[0] * 8]]
     bytecomm(handshake[0][0])
     for x in matrix:
@@ -129,6 +159,15 @@ def bytecomm(array):
 def queryController(buttonNumber):
     print(buttonNumber)
     return io.input(controller[buttonNumber])
+
+
+test1 = [[[[[1]*8, [0]*8]*2]*4]*4]
+test1 = test1[::-1]
+test2 = [[[[1,0,1,0,1,0,1,0]]*4]*4]*4
+test2 = test2[::-1]
+test3 = [[[[0,1,0,1,0,1,0,1]]*4]*4]*4
+test4 = [test2[0:2], test3[0:2]]
+# still need to reverse array. 
 
 # setup()
 # matrixcomm([[[0,1,0,1,0,1,0,1], [1,0,1,0,1,0,1,0]], [[0,1,0,1,1,1,1,1],[0,0,0,0,1,1,1,1]]])
