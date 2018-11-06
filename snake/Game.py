@@ -1,6 +1,6 @@
-import pygame
 import random
-import math
+import utilities.cube
+import numpy as np
 
 class SnakeGame:
 
@@ -19,11 +19,11 @@ class SnakeGame:
     # snake body, expressed in coordinates
     # the head is the last index, the tail is the first index
     snake_body = [[0, 0, -1], [0, 0, 0]]
-    snake_brightness = [1,1,1,1,1,1,1,1]
+    snake_brightness = [1, 1, 1, 1, 1, 1, 1, 1]
 
-    # apple, expressed in coordinates
+    # apple, expressed in coordinates (z, y, x)
     apple = [random.randint(0, 3), random.randint(0, 3), random.randint(0, 3)]
-    apple_brightness = [0,0,0,0,1,1,1,1]
+    apple_brightness = [1, 0, 0, 1, 0, 0, 0, 0]
 
     # game_over keeps track of when the game is over.
     game_over = False
@@ -37,28 +37,7 @@ class SnakeGame:
 
     # initializes the board so all values are False (meaning all LEDs should be off)
     def setup_board(self):
-        surfaces = []
-        left_offset = 0
-        top_offset = 30
-        offset = 12
-        box_radius = math.floor(2.5*offset)
-
-        for _z in range(0, 4):
-            top = top_offset
-            row_surfaces = []
-            for _y in range(0, 4):
-                val_surfaces = []
-                left = left_offset
-                for _x in range(0, 4):
-                    #                    PYGAME RECT                                     DRAW AS ACTIVE
-                    val_surfaces.append([pygame.Rect(left, top, box_radius, box_radius), False])
-                    left += box_radius + offset
-                row_surfaces.append(val_surfaces)
-                top += box_radius + offset
-            surfaces.append(row_surfaces)
-            top_offset += 8
-            left_offset += 8
-        return surfaces
+        return utilities.cube.get_cube(offset=32)
 
     # clears the board: sets every square as not active.
     def clear_board(self,):
@@ -66,7 +45,13 @@ class SnakeGame:
             for row in plane:
                 for val in row:
                     val[1] = False
-
+    
+    # passes on snake head and neck for Controller to check
+    def get_neck(self):
+        snake = self.snake_body
+        return [snake[-1], snake[-2]]
+        
+        
     # does everything necessary to update the snake.
     def update_snake(self):
         # get indices of last head
@@ -125,43 +110,29 @@ class SnakeGame:
     # see the protocol for what the representation means
     def get_board_as_sendable(self):
         data = []
+        brightness = []
 
         # chunk is 8 bits
         chunk = []
-        for zindx, z in enumerate(self.board):
-            for yindx, y in enumerate(z):
+        for z_index, z in enumerate(self.board):
+            for y_index, y in enumerate(z):
                 if len(chunk) >= 8:
                     data.append(chunk)
                     chunk = []
-                for xindx, x in enumerate(y):
-                    print("Currently checking : " + str([zindx,yindx,xindx]))
+                for x_index, x in enumerate(y):
                     if not x[1]:
-                        brightness =[0,0,0,0,0,0,0,0]
+                        # there is nothing at this position
+                        brightness = [0, 0, 0, 0, 0, 0, 0, 0]
                     else:
-                        print("Something found")
-                        apple_here = False
-                        snake_here = False
-                        for i in self.snake_body:
-                            print("Checking Snake : " + str(i))
-                            if i == [3 - zindx,3 - yindx,3 - xindx]:
-                                print("Snake found")
-                                snake_here = True
-                                brightness = self.snake_brightness
-                        print("Checking Apple : " + str(self.apple))
-                        if self.apple == [3 - zindx,3 -yindx,3 - xindx]:
-                            print("Apple found : " + str(self.apple))
-                            apple_here = True
+                        # found an apple or a snake
+                        if not self.apple == [z_index, y_index, x_index]:
+                            # not the apple, so must be snake
+                            brightness = self.snake_brightness
+                        else:
+                            # not the snake, so must be apple
                             brightness = self.apple_brightness
                     data.append(brightness)
-        print(data)
-        return data
-
-
-
-
-
-
-
-
+            
+        return np.reshape(data, (4,4,4,8))
 
 

@@ -3,12 +3,12 @@ import math
 import snake.Game
 
 
-class SnakeUI:
+class TetrisUI:
     gamefont = None
     screen = None
     score_txt = None
     score_surface = None
-    frame_rate = 1
+    frame_rate = 0.5
 
     # setup things, gets called when the UI is created automatically
     def __init__(self, screenarg, fontarg):
@@ -33,7 +33,7 @@ class SnakeUI:
                         pygame.draw.rect(self.screen, (127, 127, 127), val[0])
 
     def show_score(self, game):
-        self.score_txt = "score: " + str(game.score)
+        self.score_txt = "score: " + str(game.score) + " Press q to quit"
         self.score_surface = self.gamefont.render(self.score_txt, False, (255, 255, 255))
         self.screen.blit(self.score_surface, (0, 0))
 
